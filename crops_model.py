@@ -1,10 +1,11 @@
 import tensorflow as tf
 from tensorflow.keras import models, layers
+import matplotlib.pyplot as plt
 
 
 IMAGE_SIZE=100
 BATCH_SIZE=32
-EPOCHS=50
+EPOCHS=10
 CHANNELS=3
 
 # carga de las imagenes del directorio, aleatoriza, setea el tamaño de las imagenes y el batchsize
@@ -105,10 +106,10 @@ model.compile(
 
 # entrena el modelo usando el train dataset
 # valida con el validation datset
-model.fit(
+history = model.fit(
     train_ds,
-    batch_size=BATCH_SIZE,
     validation_data=val_ds,
+    batch_size=BATCH_SIZE,
     verbose=1,
     epochs=EPOCHS,
 )
@@ -119,3 +120,23 @@ scores = model.evaluate(test_ds)
 # guarda el modelo para futuro uso o entrenamiento
 model.save('crops_model2.keras')
 
+
+accuracy = history.history["accuracy"]
+val_accuracy = history.history["val_accuracy"]
+
+loss = history.history["loss"]
+val_loss = history.history["val_loss"]
+
+plt.plot(accuracy, label="accuracy")
+plt.plot(val_accuracy, label="validation accuracy")
+plt.ylabel("Accuracy")
+plt.xlabel("Epoch")
+plt.legend()
+plt.show()
+
+plt.plot(loss, label="loss")
+plt.plot(val_loss, label="validation loss")
+plt.ylabel("Loss")
+plt.xlabel("Epoch")
+plt.legend()
+plt.show()
